@@ -293,6 +293,7 @@ bool Hexagon::needsThunk(RelExpr expr, RelType type, const InputFile *file,
 
 void Hexagon::relocate(uint8_t *loc, const Relocation &rel,
                        uint64_t val) const {
+  int64_t sval = val;
   switch (rel.type) {
   case R_HEX_NONE:
     break;
@@ -347,19 +348,19 @@ void Hexagon::relocate(uint8_t *loc, const Relocation &rel,
     or32le(loc, applyMask(0x0fff3fff, val >> 6));
     break;
   case R_HEX_B9_PCREL:
-    checkInt(ctx, loc, val, 11, rel);
-    or32le(loc, applyMask(0x003000fe, val >> 2));
+    checkInt(ctx, loc, sval >> 2, 11, rel);
+    or32le(loc, applyMask(0x003000fe, sval >> 2));
     break;
   case R_HEX_B9_PCREL_X:
     or32le(loc, applyMask(0x003000fe, val & 0x3f));
     break;
   case R_HEX_B13_PCREL:
-    checkInt(ctx, loc, val, 15, rel);
-    or32le(loc, applyMask(0x00202ffe, val >> 2));
+    checkInt(ctx, loc, sval >> 2, 15, rel);
+    or32le(loc, applyMask(0x00202ffe, sval >> 2));
     break;
   case R_HEX_B15_PCREL:
-    checkInt(ctx, loc, val, 17, rel);
-    or32le(loc, applyMask(0x00df20fe, val >> 2));
+    checkInt(ctx, loc, sval >> 2, 17, rel);
+    or32le(loc, applyMask(0x00df20fe, sval >> 2));
     break;
   case R_HEX_B15_PCREL_X:
     or32le(loc, applyMask(0x00df20fe, val & 0x3f));
@@ -367,8 +368,8 @@ void Hexagon::relocate(uint8_t *loc, const Relocation &rel,
   case R_HEX_B22_PCREL:
   case R_HEX_GD_PLT_B22_PCREL:
   case R_HEX_PLT_B22_PCREL:
-    checkInt(ctx, loc, val, 22, rel);
-    or32le(loc, applyMask(0x1ff3ffe, val >> 2));
+    checkInt(ctx, loc, sval >> 2, 22, rel);
+    or32le(loc, applyMask(0x1ff3ffe, sval >> 2));
     break;
   case R_HEX_B22_PCREL_X:
   case R_HEX_GD_PLT_B22_PCREL_X:
