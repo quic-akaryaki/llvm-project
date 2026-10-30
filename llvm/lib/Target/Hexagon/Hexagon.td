@@ -106,6 +106,8 @@ def ExtensionHVX128B: SubtargetFeature<"hvx-length128b", "UseHVX128BOps",
 
 def ExtensionAudio: SubtargetFeature<"audio", "UseAudioOps", "true",
       "Hexagon Audio extension instructions">;
+def ExtensionHMX: SubtargetFeature<"hmx", "UseHMXOps", "true",
+      "Hexagon Matrix eXtension instructions">;
 
 def ExtensionHVXIEEEFP: SubtargetFeature<"hvx-ieee-fp", "UseHVXIEEEFPOps",
       "true", "Hexagon HVX IEEE floating point instructions">;
@@ -199,6 +201,8 @@ def UseHVXIEEEFP       : Predicate<"HST->useHVXIEEEFPOps()">,
 def UseHVXQFloat       : Predicate<"HST->useHVXQFloatOps()">,
                          AssemblerPredicate<(all_of ExtensionHVXQFloat)>;
 def UseHVXFloatingPoint: Predicate<"HST->useHVXFloatingPoint()">;
+def UseHMX             : Predicate<"HST->useHMXOps()">,
+                         AssemblerPredicate<(all_of ExtensionHMX), "hmx">;
 def HasMemNoShuf       : Predicate<"HST->hasMemNoShuf()">,
                          AssemblerPredicate<(all_of FeatureMemNoShuf)>;
 def NotOptTinyCore     : Predicate<"!HST->isTinyCore() ||"

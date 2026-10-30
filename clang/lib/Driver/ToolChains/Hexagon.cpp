@@ -44,6 +44,20 @@ static void handleHVXWarnings(const Driver &D, const ArgList &Args) {
   }
 }
 
+// Handle hmx target features explicitly.
+static void handleHMXTargetFeatures(const Driver &, const ArgList &Args,
+                                    std::vector<StringRef> &Features,
+                                    StringRef) {
+  // Handle -mhmx, -mno-hmx.
+  if (Arg *A = Args.getLastArg(options::OPT_mno_hexagon_hmx,
+                               options::OPT_mhexagon_hmx)) {
+    if (A->getOption().matches(options::OPT_mhexagon_hmx))
+      Features.push_back(Args.MakeArgString("+hmx"));
+    else
+      Features.push_back(Args.MakeArgString("-hmx"));
+  }
+}
+
 // Handle hvx target features explicitly.
 static void handleHVXTargetFeatures(const Driver &D, const ArgList &Args,
                                     std::vector<StringRef> &Features,
@@ -187,6 +201,7 @@ void hexagon::getHexagonTargetFeatures(const Driver &D,
     Cpu = Cpu.take_front(Cpu.size() - 1);
 
   handleHVXTargetFeatures(D, Args, Features, Cpu, HasHVX);
+  handleHMXTargetFeatures(D, Args, Features, Cpu);
 
   if (HexagonToolChain::isAutoHVXEnabled(Args) && !HasHVX)
     D.Diag(diag::warn_drv_needs_hvx) << "auto-vectorization";
@@ -235,6 +250,11 @@ void hexagon::Assembler::ConstructJob(Compilation &C, const JobAction &JA,
                                options::OPT_mno_hexagon_hvx_ieee_fp)) {
     if (A->getOption().matches(options::OPT_mhexagon_hvx_ieee_fp))
       CmdArgs.push_back("-mhvx-ieee-fp");
+  }
+
+  if (Args.hasFlag(options::OPT_mhexagon_hmx, options::OPT_mno_hexagon_hmx,
+                   false)) {
+    CmdArgs.push_back("-mhmx");
   }
 
   if (auto G = toolchains::HexagonToolChain::getSmallDataThreshold(Args)) {

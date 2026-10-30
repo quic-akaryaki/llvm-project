@@ -20,6 +20,7 @@
 
 #include "HexagonDepITypes.h"
 #include "MCTargetDesc/HexagonMCTargetDesc.h"
+#include "llvm/MC/MCInstrDesc.h" // included for inline functions
 
 namespace llvm {
 
@@ -78,7 +79,7 @@ namespace HexagonII {
 
   // MCInstrDesc TSFlags
   // *** Must match HexagonInstrFormat*.td ***
-  enum {
+  enum HexagonTSFlagsVal {
     // This 7-bit field describes the insn type.
     TypePos = 0,
     TypeMask = 0x7f,
@@ -169,6 +170,8 @@ namespace HexagonII {
     FPPos = 48,
     FPMask = 0x1,
 
+    isHMXActivatePos = 49,
+
     // New-Value producer-2 instructions.
     hasNewValuePos2 = 50,
     hasNewValueMask2 = 0x1,
@@ -187,6 +190,8 @@ namespace HexagonII {
     HasHvxTmpPos = 56,
     HasHvxTmpMask = 0x1,
 
+    isHMXWeightPos = 57,
+
     CVINewPos = 58,
     CVINewMask = 0x1,
 
@@ -202,6 +207,10 @@ namespace HexagonII {
     hasUnaryRestrictionPos = 62,
     hasUnaryRestrictionMask = 0x1,
   };
+
+  inline bool getTSFlag(const MCInstrDesc &MID, HexagonTSFlagsVal Pos) {
+    return (MID.TSFlags >> Pos) & 1;
+  }
 
   // *** The code above must match HexagonInstrFormat*.td *** //
 

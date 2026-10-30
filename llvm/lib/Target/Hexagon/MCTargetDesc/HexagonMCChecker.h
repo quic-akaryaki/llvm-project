@@ -101,6 +101,7 @@ class HexagonMCChecker {
   bool checkHWLoop();
   bool checkCOFMax1();
   bool checkLegalVecRegPair();
+  bool checkValidHMX();
   bool checkValidTmpDst();
   bool checkHVXAccum();
 

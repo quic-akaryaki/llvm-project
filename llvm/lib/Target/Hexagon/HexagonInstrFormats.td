@@ -140,6 +140,9 @@ class InstHexagon<dag outs, dag ins, string asmstr, list<dag> pattern,
   bits<1> isFP = 0;
   let TSFlags {48} = isFP; // Floating-point.
 
+  bit isHMXActivate = 0;
+  let TSFlags{49} = isHMXActivate;
+
   bits<1> hasNewValue2 = 0;
   let TSFlags{50} = hasNewValue2; // Second New-value producer insn.
   bits<3> opNewValue2 = 0;
@@ -153,6 +156,9 @@ class InstHexagon<dag outs, dag ins, string asmstr, list<dag> pattern,
 
   bits<1> hasHvxTmp = 0;
   let TSFlags{56} = hasHvxTmp;  // vector register vX.tmp false-write
+
+  bit isHMXWeight = 0;
+  let TSFlags{57} = isHMXWeight;
 
   bit CVINew = 0;
   let TSFlags{58} = CVINew;
